@@ -4,18 +4,20 @@ import android.content.Context;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.GlideBuilder;
-import com.bumptech.glide.annotation.GlideModule;
+
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.module.GlideModule;
 
 import java.lang.annotation.Annotation;
 
-public class GlideConfiguration implements GlideModule{
+public class GlideConfiguration implements GlideModule {
     @Override
-    public String glideName() {
-        return null;
+    public void applyOptions(Context context, GlideBuilder builder) {
+        builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
     }
 
     @Override
-    public Class<? extends Annotation> annotationType() {
-        return null;
+    public void registerComponents(Context context, Glide glide) {
+
     }
 }
