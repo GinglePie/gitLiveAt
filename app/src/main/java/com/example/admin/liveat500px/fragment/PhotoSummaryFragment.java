@@ -6,8 +6,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.admin.liveat500px.R;
+import com.example.admin.liveat500px.configuration.GlideConfiguration;
+import com.example.admin.liveat500px.dao.PhotoItemDao;
 
 
 /**
@@ -16,14 +22,21 @@ import com.example.admin.liveat500px.R;
 @SuppressWarnings("unused")
 public class PhotoSummaryFragment extends Fragment {
 
+    PhotoItemDao dao;
+
+    ImageView ivImg;
+    TextView tvName;
+    TextView tvDescription;
+
     public PhotoSummaryFragment() {
         super();
     }
 
     @SuppressWarnings("unused")
-    public static PhotoSummaryFragment newInstance() {
+    public static PhotoSummaryFragment newInstance(PhotoItemDao dao) {
         PhotoSummaryFragment fragment = new PhotoSummaryFragment();
         Bundle args = new Bundle();
+        args.putParcelable("dao", dao);
         fragment.setArguments(args);
         return fragment;
     }
@@ -32,6 +45,8 @@ public class PhotoSummaryFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init(savedInstanceState);
+
+        dao = getArguments().getParcelable("dao");
 
         if (savedInstanceState != null)
             onRestoreInstanceState(savedInstanceState);
@@ -52,6 +67,17 @@ public class PhotoSummaryFragment extends Fragment {
     @SuppressWarnings("UnusedParameters")
     private void initInstances(View rootView, Bundle savedInstanceState) {
         // Init 'View' instance(s) with rootView.findViewById here
+        ivImg = rootView.findViewById(R.id.ivImg);
+        tvName = rootView.findViewById(R.id.tvName);
+        tvDescription = rootView.findViewById(R.id.tvDescription);
+
+        tvName.setText(dao.getCaption());
+        tvDescription.setText(dao.getUsername() + "\n" + dao.getCamera());
+        Glide.with(PhotoSummaryFragment.this)
+                .load(dao.getImageUrl())
+                .placeholder(R.drawable.loading)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(ivImg);
     }
 
     @Override
